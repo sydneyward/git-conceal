@@ -3,7 +3,7 @@ cd $path
 
 hooks=$( ls hooks | tr " " "\n")
 for hook in $hooks
-do 
+do
   chmod +x hooks/$hook
   ln -f hooks/$hook ../.git/hooks/$hook
-done 
+done
