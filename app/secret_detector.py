@@ -49,91 +49,90 @@ if __name__ == '__main__':
    
    # here, we define some regexes that will help us with different configurations
    # that a keyword/secret pair might show up in - props to detect-secrets
-   concealListRegex = r'|'.join(concealList)
-   secret = r'[^\s]+'
+concealListRegex = r'|'.join(concealList)
+secret = r'[^\s]+'
+close = r'[]\'"]{0,2}'
+whitespace = r'\s*?'
+nonWhitespace = r'[^/s]*?'
+quotationMark = r'[\'"]'
+squareBrackets = r'(\[\])'
    
-   close = r'[]\'"]{0,2}'
-   whitespace = r'\s*?'
-   nonWhitespace = r'[^/s]*?'
-   quotationMark = r'[\'"]'
-   squareBrackets = r'(\[\])'
-   
-   colonEqualsRegex = re.compile(
-   # e.g. my_password := "bar" or my_password := bar
-      r'({list})({closing})?{whitespace}:=?{space}({quote}?)({oops})(\3)'.format(
-         list = concealListRegex,
-         closing = close,
-         quote = quotationMark,
-         space = whitespace,
-         oops = secret,
+colonEqualsRegex = re.compile(
+   # e.g. my_password := "secretpass" or my_password := secretpass
+   r'({list})({closing})?{whitespace}:=?{space}({quote}?)({oops})(\3)'.format(
+      list = concealListRegex,
+      closing = close,
+      quote = quotationMark,
+      space = whitespace,
+      oops = secret,
       ),
-   )
+  )
    
-   FOLLOWED_BY_COLON_REGEX = re.compile(
-   # e.g. api_key: foo
-      r'({list})({closing})?:{space}({quote}?)({oops})(\3)'.format(
-         list = concealListRegex,
-         closing = close,
-         quote = quotationMark,
-         space = whitespace,
-         oops = secret,
-      ),
-   )
-   
-   FOLLOWED_BY_COLON_QUOTES_REQUIRED_REGEX = re.compile(
-   # e.g. api_key: "foo"
-      r'({list})({closing})?:({space})({quote})({oops})(\4)'.format(
-         list = concealListRegex,
-         closing = close,
-         quote = quotationMark,
-         whitespace = whitespace,
-         oops = secret,
-      ),
-   )
-   
-   FOLLOWED_BY_EQUAL_SIGNS_OPTIONAL_BRACKETS_OPTIONAL_AT_SIGN_QUOTES_REQUIRED_REGEX = re.compile(
-   # e.g. my_password = "bar"
-   # e.g. my_password = @"bar"
-   # e.g. my_password[] = "bar";
-      r'({list})({brackets})?{space}={space}(@)?(")({oops})(\5)'.format(   # noqa: E501
-         list = concealListRegex,
-         brackets = squareBrackets,
-         space = whitespace,
-         oops = secret,
-      ),
-   )
-   
-   FOLLOWED_BY_EQUAL_SIGNS_REGEX = re.compile(
-   # e.g. my_password = bar
-      r'({list})({closing})?{space}={space}({quote}?)({oops})(\3)'.format(
-         list = concealListRegex,
-         closing = close,
-         quote = quotationMark,
-         space = whitespace,
-         oops = secret,
-      ),
-   )
-   
-   FOLLOWED_BY_EQUAL_SIGNS_QUOTES_REQUIRED_REGEX = re.compile(
-   # e.g. my_password = "bar"
-      r'({list})({closing})?{space}={space}({quote})({oops})(\3)'.format(
-         list = concealListRegex,
-         closing = close,
-         quote = quotationMark,
-         space = whitespace,
-         oops = secret,
-      ),
-   )
-   
-   FOLLOWED_BY_QUOTES_AND_SEMICOLON_REGEX = re.compile(
-   # e.g. private_key "something";
-      r'({list}){non_whitespace}{space}({quote})({oops})(\2);'.format(
-         list = concealList,
-         non_whitespace = nonWhitespace,
-         space = whitespace,
-         quote = quotationMark,
-         oops = secret,
-      ),
-   )
-   
+FOLLOWED_BY_COLON_REGEX = re.compile(
+# e.g. api_key: foo
+   r'({list})({closing})?:{space}({quote}?)({oops})(\3)'.format(
+      list = concealListRegex,
+      closing = close,
+      quote = quotationMark,
+      space = whitespace,
+      oops = secret,
+   ),
+)
+
+FOLLOWED_BY_COLON_QUOTES_REQUIRED_REGEX = re.compile(
+# e.g. api_key: "foo"
+   r'({list})({closing})?:({space})({quote})({oops})(\4)'.format(
+      list = concealListRegex,
+      closing = close,
+      quote = quotationMark,
+      whitespace = whitespace,
+      oops = secret,
+   ),
+)
+
+FOLLOWED_BY_EQUAL_SIGNS_OPTIONAL_BRACKETS_OPTIONAL_AT_SIGN_QUOTES_REQUIRED_REGEX = re.compile(
+# e.g. my_password = "secretpass"
+# e.g. my_password = @"secretpass"
+# e.g. my_password[] = "secretpass";
+   r'({list})({brackets})?{space}={space}(@)?(")({oops})(\5)'.format(   # noqa: E501
+      list = concealListRegex,
+      brackets = squareBrackets,
+      space = whitespace,
+      oops = secret,
+   ),
+)
+
+FOLLOWED_BY_EQUAL_SIGNS_REGEX = re.compile(
+# e.g. my_password = secretpass
+   r'({list})({closing})?{space}={space}({quote}?)({oops})(\3)'.format(
+      list = concealListRegex,
+      closing = close,
+      quote = quotationMark,
+      space = whitespace,
+      oops = secret,
+   ),
+)
+
+FOLLOWED_BY_EQUAL_SIGNS_QUOTES_REQUIRED_REGEX = re.compile(
+# e.g. my_password = "secretpass"
+   r'({list})({closing})?{space}={space}({quote})({oops})(\3)'.format(
+      list = concealListRegex,
+      closing = close,
+      quote = quotationMark,
+      space = whitespace,
+      oops = secret,
+   ),
+)
+
+FOLLOWED_BY_QUOTES_AND_SEMICOLON_REGEX = re.compile(
+# e.g. private_key "something";
+   r'({list}){non_whitespace}{space}({quote})({oops})(\2);'.format(
+      list = concealList,
+      non_whitespace = nonWhitespace,
+      space = whitespace,
+      quote = quotationMark,
+      oops = secret,
+   ),
+)
+
    
