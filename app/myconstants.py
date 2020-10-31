@@ -81,18 +81,6 @@ FOLLOWED_BY_EQUAL_SIGNS_OPTIONAL_BRACKETS_OPTIONAL_AT_SIGN_QUOTES_REQUIRED_REGEX
     ),
 )
 
-FOLLOWED_BY_EQUAL_SIGNS_OPTIONAL_BRACKETS_OPTIONAL_AT_SIGN_QUOTES_REQUIRED_REGEX_NO_SPACES = re.compile(
-    # e.g. my_password="secretpass"
-    # e.g. my_password=@"secretpass"
-    # e.g. my_password[]="secretpass";
-    r'({list})({brackets})?=(@)?(")({oops})(\4)'.format(  # noqa: E501
-        list=CONCEAL_LIST_REGEX,
-        brackets=SQUARE_BRACKETS,
-        space=WHITESPACE,
-        oops=SECRET,
-    ),
-)
-
 FOLLOWED_BY_EQUAL_SIGNS_REGEX = re.compile(
     # e.g. my_password = secretpass
     r'({list})({closing})?{space}={space}({quote}?)({oops})(\3)'.format(

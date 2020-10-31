@@ -21,13 +21,22 @@ def get_secret_dict(dictionary):
 
     for item in dict_list:
       # use regex (constants) and high entropy to look for secrets
-      found_item = myconstants.FOLLOWED_BY_EQUAL_SIGNS_OPTIONAL_BRACKETS_OPTIONAL_AT_SIGN_QUOTES_REQUIRED_REGEX.match(item)
+      #found_item = myconstants.FOLLOWED_BY_COLON_REGEX.match(item)
+      found_secret = (
+      myconstants.COLON_EQUALS_REGEX.match(item) or 
+      myconstants.FOLLOWED_BY_COLON_REGEX.match(item) or 
+      myconstants.FOLLOWED_BY_COLON_QUOTES_REQUIRED_REGEX.match(item) or 
+      myconstants.FOLLOWED_BY_EQUAL_SIGNS_OPTIONAL_BRACKETS_OPTIONAL_AT_SIGN_QUOTES_REQUIRED_REGEX.match(item) or
+      myconstants.FOLLOWED_BY_EQUAL_SIGNS_REGEX.match(item) or 
+      myconstants.FOLLOWED_BY_EQUAL_SIGNS_QUOTES_REQUIRED_REGEX.match(item) or
+      myconstants.FOLLOWED_BY_QUOTES_AND_SEMICOLON_REGEX.match(item)
+      )
+
       #print(found_item)
-      if item in myconstants.CONCEAL_LIST or found_item != None:
+      if item in myconstants.CONCEAL_LIST or found_secret != None:
         #if item in myconstants.CONCEAL_LIST or item in myconstants.CONCEAL_LIST_REGEX: # didn't change anything
         # found a secret! add it to the secrets list
         secrets_list.append(item)
-        #i think we also need to get the line number here so we can later locate the secret easily
 
     # after all secrets in that line found, add that line of secrets to secret_dict
     secret_dict.append(secrets_list)
