@@ -1,158 +1,56 @@
+"""
+Detects secrets in a given dictionary (pickled)
+"""
 import sys
 import pickle
-import re
+# import re
+import app.myconstants
 
 
-def dummy_funct(dict):
-    """
+def get_secret_dict(dictionary):
+  """
+  :return:
+  :param dictionary::return: dict with line number - error key pair
+  """
+  secret_dict = []  # this should create empty dict for secrets
 
-    :param dict:
-    :return: dict with line number - error key pair
-    """
-    secret_dict = []  # this should empty dict
+  for dict_key, dict_list in dictionary.items():
+    secrets_list = []
 
-    for dict_key, dict_list in token_dict.items():
-        secret_list = []
+    for item in dict_list:
+      # use regex (constants) and high entropy to look for secrets
+      if item in app.myconstants.CONCEAL_LIST:
+        # found a secret! add it to the secrets list
+        secrets_list.append(item)
 
-        for item in dict_list:
-            # regex and secret searching here
+    # after all secrets in that line found, add that line of secrets to secret_dict
+    secret_dict[dict_key] = [secrets_list]
 
-            # found a secret! add it to the secret list
-            secret_list.append(item)
-
-        secret_dict[dict_key] = [secret_list]
-
-    return secret_dict
+  return secret_dict
 
 
 # Start up the program.
 if __name__ == '__main__':
 
-    # pickle name of the dictionary being used is passed in as a sys parameter
-    # we can then extract the dictionary
+  # pickle name of the dictionary being used is passed in as a sys parameter
+  # we can then extract the dictionary
 
-    # Check that the file name is provided by sys arg.
-    if len(sys.argv) < 2:
-        print('Error: No pickle provided.')
-        quit()
+  # Check that the file name is provided by sys arg.
+  if len(sys.argv) < 2:
+    print('Error: No pickle provided.')
+    sys.exit(1)
 
-    # Extract pickle name from sys arg.
-    pickle_name = sys.argv[1]
+  # Extract pickle name from sys arg.
+  pickle_name = sys.argv[1]
 
-    code_lines = pickle.load(open(pickle_name, 'rb'))
+  code_lines = pickle.load(open(pickle_name, 'rb'))
 
-    # output to see what you're working with
-    print(code_lines)
+  # output to see what you're working with
+  print(code_lines)
 
-    # this line of code will show you how many lines you have to shift through
-    # just so you know, this can be removed after
-    print(len(code_lines))
+  # this line of code will show you how many lines you have to shift through
+  # just so you know, this can be removed after
+  print(len(code_lines))
 
-    # list of keywords to look for secrets
-    concealList = (
-        'AKIA'
-        'apikey',
-        'api_key',
-        'aws_secret_access_key',
-        'BEGIN DSA PRIVATE KEY'
-        'BEGIN EC PRIVATE KEY'
-        'BEGIN OPENSSH PRIVATE KEY'
-        'BEGIN PGP PRIVATE KEY BLOCK'
-        'BEGIN PRIVATE KEY'
-        'BEGIN RSA PRIVATE KEY'
-        'BEGIN SSH2 ENCRYPTED PRIVATE KEY'
-        'db_pass',
-        'password',
-        'passwd',
-        'pw'
-        'private_key',
-        'secret',
-    )
-
-    # here, we define some regexes that will help us with different configurations
-    # that a keyword/secret pair might show up in - props to detect-secrets
-    concealListRegex = r'|'.join(concealList)
-    secret = r'[^\s]+'
-    close = r'[]\'"]{0,2}'
-    whitespace = r'\s*?'
-    nonWhitespace = r'[^/s]*?'
-    quotationMark = r'[\'"]'
-    squareBrackets = r'(\[\])'
-
-    colonEqualsRegex = re.compile(
-        # e.g. my_password := "secretpass" or my_password := secretpass
-        r'({list})({closing})?{whitespace}:=?{space}({quote}?)({oops})(\3)'.format(
-            list=concealListRegex,
-            closing=close,
-            quote=quotationMark,
-            space=whitespace,
-            oops=secret,
-        ),
-    )
-
-    FOLLOWED_BY_COLON_REGEX = re.compile(
-        # e.g. api_key: foo
-        r'({list})({closing})?:{space}({quote}?)({oops})(\3)'.format(
-            list=concealListRegex,
-            closing=close,
-            quote=quotationMark,
-            space=whitespace,
-            oops=secret,
-        ),
-    )
-
-    FOLLOWED_BY_COLON_QUOTES_REQUIRED_REGEX = re.compile(
-        # e.g. api_key: "foo"
-        r'({list})({closing})?:({space})({quote})({oops})(\4)'.format(
-            list=concealListRegex,
-            closing=close,
-            quote=quotationMark,
-            space=whitespace,
-            oops=secret,
-        ),
-    )
-
-    FOLLOWED_BY_EQUAL_SIGNS_OPTIONAL_BRACKETS_OPTIONAL_AT_SIGN_QUOTES_REQUIRED_REGEX = re.compile(
-        # e.g. my_password = "secretpass"
-        # e.g. my_password = @"secretpass"
-        # e.g. my_password[] = "secretpass";
-        r'({list})({brackets})?{space}={space}(@)?(")({oops})(\5)'.format(  # noqa: E501
-            list=concealListRegex,
-            brackets=squareBrackets,
-            space=whitespace,
-            oops=secret,
-        ),
-    )
-
-    FOLLOWED_BY_EQUAL_SIGNS_REGEX = re.compile(
-        # e.g. my_password = secretpass
-        r'({list})({closing})?{space}={space}({quote}?)({oops})(\3)'.format(
-            list=concealListRegex,
-            closing=close,
-            quote=quotationMark,
-            space=whitespace,
-            oops=secret,
-        ),
-    )
-
-    FOLLOWED_BY_EQUAL_SIGNS_QUOTES_REQUIRED_REGEX = re.compile(
-        # e.g. my_password = "secretpass"
-        r'({list})({closing})?{space}={space}({quote})({oops})(\3)'.format(
-            list=concealListRegex,
-            closing=close,
-            quote=quotationMark,
-            space=whitespace,
-            oops=secret,
-            ),
-        )
-
-    FOLLOWED_BY_QUOTES_AND_SEMICOLON_REGEX = re.compile(
-        # e.g. private_key "something";
-        r'({list}){non_whitespace}{space}({quote})({oops})(\2);'.format(
-            list=concealList,
-            non_whitespace=nonWhitespace,
-            space=whitespace,
-            quote=quotationMark,
-            oops=secret,
-            ),
-        )
+  # get a dictionary of the list of secrets
+  secret_list = get_secret_dict(code_lines)
