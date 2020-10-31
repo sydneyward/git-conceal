@@ -21,7 +21,10 @@ CONCEAL_LIST = ['AKIA',
                 'passwd',
                 'pw',
                 'private_key',
-                'secret']
+                'secret',
+                'my_password',
+                'my_pass'
+                ]
 
 # here, we define some regexes that will help us with different configurations
 # that a keyword/secret pair might show up in - props to detect-secrets
@@ -71,6 +74,18 @@ FOLLOWED_BY_EQUAL_SIGNS_OPTIONAL_BRACKETS_OPTIONAL_AT_SIGN_QUOTES_REQUIRED_REGEX
     # e.g. my_password = @"secretpass"
     # e.g. my_password[] = "secretpass";
     r'({list})({brackets})?{space}={space}(@)?(")({oops})(\5)'.format(  # noqa: E501
+        list=CONCEAL_LIST_REGEX,
+        brackets=SQUARE_BRACKETS,
+        space=WHITESPACE,
+        oops=SECRET,
+    ),
+)
+
+FOLLOWED_BY_EQUAL_SIGNS_OPTIONAL_BRACKETS_OPTIONAL_AT_SIGN_QUOTES_REQUIRED_REGEX_NO_SPACES = re.compile(
+    # e.g. my_password="secretpass"
+    # e.g. my_password=@"secretpass"
+    # e.g. my_password[]="secretpass";
+    r'({list})({brackets})?=(@)?(")({oops})(\4)'.format(  # noqa: E501
         list=CONCEAL_LIST_REGEX,
         brackets=SQUARE_BRACKETS,
         space=WHITESPACE,

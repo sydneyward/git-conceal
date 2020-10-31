@@ -3,7 +3,7 @@ Detects secrets in a given dictionary (pickled)
 """
 import sys
 import pickle
-# import re
+import re
 import myconstants  # pylint: disable=import-error
 
 
@@ -14,14 +14,20 @@ def get_secret_dict(dictionary):
   """
   secret_dict = []  # this should create empty dict for secrets
 
+  #regex_matches = 
+
   for dict_key, dict_list in dictionary.items():  # pylint: disable=unused-variable
     secrets_list = []
 
     for item in dict_list:
       # use regex (constants) and high entropy to look for secrets
-      if item in myconstants.CONCEAL_LIST:
+      found_item = myconstants.FOLLOWED_BY_EQUAL_SIGNS_OPTIONAL_BRACKETS_OPTIONAL_AT_SIGN_QUOTES_REQUIRED_REGEX.match(item)
+      #print(found_item)
+      if item in myconstants.CONCEAL_LIST or found_item != None:
+        #if item in myconstants.CONCEAL_LIST or item in myconstants.CONCEAL_LIST_REGEX: # didn't change anything
         # found a secret! add it to the secrets list
         secrets_list.append(item)
+        #i think we also need to get the line number here so we can later locate the secret easily
 
     # after all secrets in that line found, add that line of secrets to secret_dict
     secret_dict.append(secrets_list)
