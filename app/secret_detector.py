@@ -50,7 +50,10 @@ if __name__ == '__main__':
 
   # this line of code will show you how many lines you have to shift through
   # just so you know, this can be removed after
-  print(len(code_lines))
+  print("Number of lines in code file: " + str(len(code_lines)))
 
   # get a dictionary of the list of secrets
   secret_list = get_secret_dict(code_lines)
+
+  # print list of secrets
+  print(secret_list)
