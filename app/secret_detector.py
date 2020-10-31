@@ -4,7 +4,7 @@ Detects secrets in a given dictionary (pickled)
 import sys
 import pickle
 # import re
-import app.myconstants
+import myconstants # pylint: disable=import-error
 
 
 def get_secret_dict(dictionary):
@@ -19,7 +19,7 @@ def get_secret_dict(dictionary):
 
     for item in dict_list:
       # use regex (constants) and high entropy to look for secrets
-      if item in app.myconstants.CONCEAL_LIST:
+      if item in myconstants.CONCEAL_LIST:
         # found a secret! add it to the secrets list
         secrets_list.append(item)
 
