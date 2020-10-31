@@ -4,7 +4,7 @@ Detects secrets in a given dictionary (pickled)
 import sys
 import pickle
 # import re
-import myconstants # pylint: disable=import-error
+import myconstants  # pylint: disable=import-error
 
 
 def get_secret_dict(dictionary):
@@ -14,7 +14,7 @@ def get_secret_dict(dictionary):
   """
   secret_dict = []  # this should create empty dict for secrets
 
-  for dict_key, dict_list in dictionary.items():
+  for dict_key, dict_list in dictionary.items():  # pylint: disable=unused-variable
     secrets_list = []
 
     for item in dict_list:
@@ -24,7 +24,7 @@ def get_secret_dict(dictionary):
         secrets_list.append(item)
 
     # after all secrets in that line found, add that line of secrets to secret_dict
-    secret_dict[dict_key] = [secrets_list]
+    secret_dict.append(secrets_list)
 
   return secret_dict
 
