@@ -18,7 +18,8 @@ def get_secret_dict(dictionary):
 
   for dict_key, dict_list in dictionary.items():  # pylint: disable=unused-variable
     secrets_list = []
-
+    
+    
     for item in dict_list:
       # use regex (constants) and high entropy to look for secrets
       #found_item = myconstants.FOLLOWED_BY_COLON_REGEX.match(item)
@@ -31,7 +32,8 @@ def get_secret_dict(dictionary):
       myconstants.FOLLOWED_BY_EQUAL_SIGNS_QUOTES_REQUIRED_REGEX.match(item) or
       myconstants.FOLLOWED_BY_QUOTES_AND_SEMICOLON_REGEX.match(item)
       )
-
+      
+      #print(item)
       #print(found_item)
       if item in myconstants.CONCEAL_LIST or found_secret != None:
         #if item in myconstants.CONCEAL_LIST or item in myconstants.CONCEAL_LIST_REGEX: # didn't change anything
@@ -61,7 +63,7 @@ if __name__ == '__main__':
   code_lines = pickle.load(open(pickle_name, 'rb'))
 
   # output to see what you're working with
-  print(code_lines)
+  print(code_lines)   
 
   # this line of code will show you how many lines you have to shift through
   # just so you know, this can be removed after
