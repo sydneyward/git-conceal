@@ -81,6 +81,7 @@ if __name__ == '__main__':
 
     # Print for debugging
     print(token_dict)
+    print(line_dict)
 
     # Remove .txt or whatnot from filename
     base_file = filename.split('.')
@@ -90,4 +91,4 @@ if __name__ == '__main__':
     file_line_pickle = base_file[0] + '_lines.pickle'
 
     pickle.dump(token_dict, open(file_token_pickle, 'wb'))
-    pickle.dump(token_dict, open(file_line_pickle, 'wb'))
+    pickle.dump(line_dict, open(file_line_pickle, 'wb'))
