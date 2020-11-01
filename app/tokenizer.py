@@ -60,7 +60,7 @@ def tokenize(f_name):
         code_token[line_num] = line_token
 
     # after going through all lines, return dictionary
-    return code_token
+    return code_token, code_line
 
 
 # Start up the program. returns filename of the pickle
@@ -88,7 +88,6 @@ if __name__ == '__main__':
     # Pickle the file so it can be used by other programs, based off filename
     file_token_pickle = base_file[0] + '_tokens.pickle'
     file_line_pickle = base_file[0] + '_lines.pickle'
-
 
     pickle.dump(token_dict, open(file_token_pickle, 'wb'))
     pickle.dump(token_dict, open(file_line_pickle, 'wb'))
