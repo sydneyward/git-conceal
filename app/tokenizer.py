@@ -44,7 +44,7 @@ def tokenize(f_name):
         code_line[line_num] = line
 
         # Now, go through the line and split it on the whitespace and save to list
-        line_token = line.splitlines()
+        line_token = line.splitlines(True)
 
         # Last word in the list may have an end of line deliminator, remove him!
         last_index = len(line_token) - 1
