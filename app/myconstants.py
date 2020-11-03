@@ -30,7 +30,7 @@ CONCEAL_LIST = ['AKIA',
 # that a keyword/secret pair might show up in - props to detect-secrets
 CONCEAL_LIST_REGEX = r'|'.join(CONCEAL_LIST)
 SECRET = r'[^\s]+'
-CLOSE = r'[]\'"]{0,2}'
+CLOSE = r'[\]\'"\)\}]{0,2}'
 WHITESPACE = r'\s*?'
 NONWHITESPACE = r'[^/s]*?'
 QUOTATION_MARK = r'[\'"]'

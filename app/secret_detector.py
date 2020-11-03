@@ -3,7 +3,6 @@ Detects secrets in a given dictionary (pickled)
 """
 import sys
 import pickle
-import re
 import myconstants  # pylint: disable=import-error
 
 
@@ -14,28 +13,25 @@ def get_secret_dict(dictionary):
   """
   secret_dict = []  # this should create empty dict for secrets
 
-  #regex_matches = 
-
   for dict_key, dict_list in dictionary.items():  # pylint: disable=unused-variable
     secrets_list = []
-    
-    
+
     for item in dict_list:
-      # use regex (constants) and high entropy to look for secrets
-      #found_item = myconstants.FOLLOWED_BY_COLON_REGEX.match(item)
+    # use regex (constants) and high entropy to look for secrets
+      # found_item = myconstants.FOLLOWED_BY_COLON_REGEX.match(item)
       found_secret = (
-      myconstants.COLON_EQUALS_REGEX.match(item) or 
-      myconstants.FOLLOWED_BY_COLON_REGEX.match(item) or 
-      myconstants.FOLLOWED_BY_COLON_QUOTES_REQUIRED_REGEX.match(item) or 
-      myconstants.FOLLOWED_BY_EQUAL_SIGNS_OPTIONAL_BRACKETS_OPTIONAL_AT_SIGN_QUOTES_REQUIRED_REGEX.match(item) or
-      myconstants.FOLLOWED_BY_EQUAL_SIGNS_REGEX.match(item) or 
-      myconstants.FOLLOWED_BY_EQUAL_SIGNS_QUOTES_REQUIRED_REGEX.match(item) or
-      myconstants.FOLLOWED_BY_QUOTES_AND_SEMICOLON_REGEX.match(item)
+        myconstants.COLON_EQUALS_REGEX.search(item) or
+        myconstants.FOLLOWED_BY_COLON_REGEX.search(item) or
+        myconstants.FOLLOWED_BY_COLON_QUOTES_REQUIRED_REGEX.search(item) or
+        myconstants.FOLLOWED_BY_EQUAL_SIGNS_OPTIONAL_BRACKETS_OPTIONAL_AT_SIGN_QUOTES_REQUIRED_REGEX.search(item) or
+        myconstants.FOLLOWED_BY_EQUAL_SIGNS_REGEX.search(item) or
+        myconstants.FOLLOWED_BY_EQUAL_SIGNS_QUOTES_REQUIRED_REGEX.search(item) or
+        myconstants.FOLLOWED_BY_QUOTES_AND_SEMICOLON_REGEX.search(item)
       )
-      
+
       #print(item)
       #print(found_item)
-      if item in myconstants.CONCEAL_LIST or found_secret != None:
+      if item in myconstants.CONCEAL_LIST or found_secret is not None:
         #if item in myconstants.CONCEAL_LIST or item in myconstants.CONCEAL_LIST_REGEX: # didn't change anything
         # found a secret! add it to the secrets list
         secrets_list.append(item)
@@ -63,7 +59,7 @@ if __name__ == '__main__':
   code_lines = pickle.load(open(pickle_name, 'rb'))
 
   # output to see what you're working with
-  print(code_lines)   
+  print(code_lines)
 
   # this line of code will show you how many lines you have to shift through
   # just so you know, this can be removed after
