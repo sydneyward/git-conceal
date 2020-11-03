@@ -40,11 +40,13 @@ def tokenize(f_name):
              code_line[line_num] = line_token
              continue
 
-        # add the whole line to the code_line dict
-        code_line[line_num] = line
-
         # Now, go through the line and split it on the whitespace and save to list
-        line_token = line.splitlines(True)
+        line_token = line.splitlines()
+
+        # add the whole line to the code_line dict
+        code_line[line_num] = line_token
+
+        line_token = line.split()
 
         # Last word in the list may have an end of line deliminator, remove him!
         last_index = len(line_token) - 1
