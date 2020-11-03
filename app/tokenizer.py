@@ -5,7 +5,6 @@ Tokenizes an input file
 import sys
 import pickle
 
-
 def tokenize(f_name):
   """
   Processes the text into tokens and creates a dict of them.
@@ -34,6 +33,7 @@ def tokenize(f_name):
   for line in all_lines:
     # First, increment the line number
     line_num += 1
+
 
     # See if the line is empty, do not save empty lines to dict.
     if line == '\n':
