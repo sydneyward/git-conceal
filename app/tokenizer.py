@@ -1,7 +1,3 @@
-import sys
-import pickle
-
-
 def tokenize(f_name):
     """
     Processes the text into tokens and creates a dict of them.
@@ -62,4 +58,4 @@ def tokenize(f_name):
         code_token[line_num] = line_token
 
     # after going through all lines, return dictionary
-    return code_token, code_line
+    return code_line
