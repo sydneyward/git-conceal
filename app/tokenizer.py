@@ -40,10 +40,12 @@ def tokenize(f_name):
              code_line[line_num] = line_token
              continue
 
-        # add the whole line to the code_line dict
-        code_line[line_num] = line
-
         # Now, go through the line and split it on the whitespace and save to list
+        line_token = line.splitlines()
+
+        # add the whole line to the code_line dict
+        code_line[line_num] = line_token
+
         line_token = line.split()
 
         # Last word in the list may have an end of line deliminator, remove him!
@@ -61,34 +63,3 @@ def tokenize(f_name):
 
     # after going through all lines, return dictionary
     return code_token, code_line
-
-
-# Start up the program. returns filename of the pickle
-if __name__ == '__main__':
-
-    # Check that the file name is provided by sys arg.
-    if len(sys.argv) < 2:
-        print('Error: No file provided to check.')
-        quit()
-
-    # Extract file name from sys arg.  This may need to change.
-    # This can also be altered to filter through several files if needed.
-    filename = sys.argv[1]
-
-    # Tokenize raw text by passing file name(and preprocess). I think this will be useful but it
-    # can be easily removed if capital letters or anything help with high entropy calculations
-    token_dict, line_dict = tokenize(filename)
-
-    # Print for debugging
-    print(token_dict)
-    print(line_dict)
-
-    # Remove .txt or whatnot from filename
-    base_file = filename.split('.')
-
-    # Pickle the file so it can be used by other programs, based off filename
-    file_token_pickle = base_file[0] + '_tokens.pickle'
-    file_line_pickle = base_file[0] + '_lines.pickle'
-
-    pickle.dump(token_dict, open(file_token_pickle, 'wb'))
-    pickle.dump(line_dict, open(file_line_pickle, 'wb'))
