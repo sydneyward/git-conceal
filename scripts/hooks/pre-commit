@@ -1,2 +1,0 @@
-#!bin/sh
-python -m pylint app --indent-string '  ' --max-line-length 120
