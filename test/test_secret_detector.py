@@ -19,7 +19,7 @@ class testGitConceal(unittest.TestCase):
   def test_regex_match_1(self):
     """ Tests regex_match() """
     secret_dict = regex_match({0: ['password=help, username=help']})
-    self.assertEqual(secret_dict, [['A regex was matched againsts: password=help, username=help']])
+    self.assertEqual(secret_dict, [['A regex was matched against: password=help, username=help']])
   def test_regex_match_2(self):
     """ Tests regex_match() """
     secret_dict = regex_match({0: ['will not trigger']})

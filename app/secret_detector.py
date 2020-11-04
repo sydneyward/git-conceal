@@ -33,7 +33,7 @@ def regex_match(code_lines):
       if item in myconstants.CONCEAL_LIST or found_secret is not None:
         #if item in myconstants.CONCEAL_LIST or item in myconstants.CONCEAL_LIST_REGEX: # didn't change anything
         # found a secret! add it to the secrets list
-        secrets_list.append(f"A regex was matched againsts: {item}")
+        secrets_list.append(f"A regex was matched against: {item}")
 
     # after all secrets in that line found, add that line of secrets to secret_dict
     secret_dict.append(secrets_list)
@@ -78,21 +78,21 @@ def entropy_check(token):
 def main():
   """ The main function """
   proj_name = sys.argv[1]
-  file_path = "files.txt"
+  file_path = f"{proj_name}/files.txt"
   with open(file_path) as file:
     file_names = file.read().splitlines()
   for file_name in file_names:
-    if file_name != "files.txt":
-      count_secrets = 0
-      code_lines = tokenize(f"{proj_name}/{file_name}")
-      secret_list = regex_match(code_lines)
-      secret_list = get_entropy_report(code_lines, secret_list)
-      print(f"For file \'{file_name}\':")
-      for line_num, item in enumerate(secret_list):
-        if item:
-          count_secrets += 1
-          print(f"  line: {line_num}    {item[0]}")
-      print(f"There were {count_secrets} secrets detected.\n\n")
+    count_secrets = 0
+    code_lines = tokenize(f"{proj_name}/{file_name}")
+    secret_list = regex_match(code_lines)
+    secret_list = get_entropy_report(code_lines, secret_list)
+    print(f"For file \'{file_name}\':")
+    for line_num, item in enumerate(secret_list):
+      if item:
+        count_secrets += 1
+        print(f"  line: {line_num}    {item[0]}")
+    print(f"There were {count_secrets} secrets detected.\n\n")
+
 
 if __name__ == '__main__':
   main()
