@@ -4,29 +4,20 @@ This application is a Github secrets detector. It runs a check for various regex
 ### To add this scan to your repository, add the following commands to your pre-commit hook.
 NOTE: You pre-commit hook is likely in the file path .git/hooks/pre-commit
 
-`#!/bin/sh`
-
-`git diff --name-only --diff-filter=d --staged > files.txt`
-
-`tar cfvz project.tar ../<< PROJECT_FOLDER_NAME >>`
-
-`docker pull sydneyward/git-conceal:latest`
-
-`docker run -v "$(pwd)/project.tar":/app/project.tar sydneyward/git-conceal:latest project.tar << PROJECT_FOLDER_NAME >>`
-
-`rm -f files.txt project.tar`
-
-`exec 0< /dev/tty`
-
-`read -p "Would you like to proceed with the commit? [y|anything else] " response`
-
-`if [ "$response" != "y" ]; then`
-
-`  echo "Commit aborted."`
-
-`  exit 1`
-
-`fi`
+```shell
+#!/bin/sh
+git diff --name-only --diff-filter=d --staged > files.txt
+tar cfvz project.tar ../<< PROJECT_FOLDER_NAME >>
+docker pull sydneyward/git-conceal:latest
+docker run -v "$(pwd)/project.tar":/app/project.tar sydneyward/git-conceal:latest project.tar << PROJECT_FOLDER_NAME >>
+rm -f files.txt project.tar
+exec 0< /dev/tty
+read -p "Would you like to proceed with the commit? [y|anything else] " response
+if [ "$response" != "y" ]; then
+  echo "Commit aborted."
+  exit 1
+fi
+```
 
 
 ### Contributers
