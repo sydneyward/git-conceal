@@ -5,7 +5,7 @@ Some aspects borrowed from Yelp/detect-secrets
 import re
 
 
-# list of keywords to look for secrets
+# list of keywords to look for some secrets
 CONCEAL_LIST = ['AKIA',
                 'apikey',
                 'api_key',
